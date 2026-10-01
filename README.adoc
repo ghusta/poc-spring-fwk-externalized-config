@@ -1,0 +1,11 @@
+= POC : Spring FWK with Externalized Configuration
+:toc:
+:imagesdir: assets/images
+
+== Description
+
+Trying to do the same as in Spring Boot.
+
+== References
+
+* https://docs.spring.io/spring-boot/reference/features/external-config.html
