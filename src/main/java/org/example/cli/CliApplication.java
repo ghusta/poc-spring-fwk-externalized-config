@@ -1,6 +1,7 @@
 package org.example.cli;
 
 import org.example.config.ApplicationConfig;
+import org.example.context.ProfilePropertySourceInitializer;
 import org.example.context.ProfilesLoggerInitializer;
 import org.example.context.PropertySourcesLoggerInitializer;
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ public class CliApplication {
 
     private static ApplicationContextInitializer<ConfigurableApplicationContext>[] getRootApplicationContextInitializers() {
         return new ApplicationContextInitializer[]{
+                new ProfilePropertySourceInitializer(),
                 new ProfilesLoggerInitializer(),
                 new PropertySourcesLoggerInitializer()
         };
