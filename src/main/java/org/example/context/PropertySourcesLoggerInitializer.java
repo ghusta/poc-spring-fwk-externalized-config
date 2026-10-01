@@ -8,6 +8,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
 
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class PropertySourcesLoggerInitializer
@@ -21,8 +22,12 @@ public class PropertySourcesLoggerInitializer
         MutablePropertySources propertySources = environment.getPropertySources();
 
         log.debug("Listing the ConfigurableEnvironment's propertySources (@PropertySources not displayed here as they are processed later)");
-        propertySources.forEach(propertySource ->
-                log.debug("* {} ({})", propertySource.getName(), propertySource.getClass()));
+        int i = 0;
+        for (PropertySource<?> propertySource : propertySources) {
+            String strIdx = String.format("%2s", i + 1);
+            log.debug("[{}] {} ({})", strIdx, propertySource.getName(), propertySource.getClass());
+            i++;
+        }
     }
 
 }
