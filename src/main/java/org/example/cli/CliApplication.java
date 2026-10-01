@@ -22,10 +22,7 @@ public class CliApplication {
         log.debug("Application started");
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 
-        ApplicationContextInitializer<ConfigurableApplicationContext>[] contextInitializers = getRootApplicationContextInitializers();
-        Arrays.stream(contextInitializers)
-                .sorted(AnnotationAwareOrderComparator.INSTANCE)
-                .forEach(i -> i.initialize(applicationContext));
+        initializeContextInitializers(applicationContext);
 
         applicationContext.register(ApplicationConfig.class);
         applicationContext.refresh();
@@ -41,6 +38,12 @@ public class CliApplication {
         Objects.requireNonNull(prop1, "business prop1 is null");
 
         applicationContext.close();
+    }
+
+    private static void initializeContextInitializers(ConfigurableApplicationContext applicationContext) {
+        Arrays.stream(getRootApplicationContextInitializers())
+                .sorted(AnnotationAwareOrderComparator.INSTANCE)
+                .forEach(i -> i.initialize(applicationContext));
     }
 
     private static ApplicationContextInitializer<ConfigurableApplicationContext>[] getRootApplicationContextInitializers() {
