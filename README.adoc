@@ -6,6 +6,26 @@
 
 Trying to do the same as in Spring Boot.
 
+== Activate a Spring Profile
+
+To activate a profile named _dev_, there are multiple solutions, like:
+
+=== JVM System Parameter
+
+[source,bash]
+----
+-Dspring.profiles.active=dev
+----
+
+=== Environment Variable
+
+[source,bash]
+----
+export SPRING_PROFILES_ACTIVE=dev
+----
+
 == References
 
 * https://docs.spring.io/spring-boot/reference/features/external-config.html
+* Spring Profiles
+** https://www.baeldung.com/spring-profiles
