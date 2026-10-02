@@ -3,7 +3,7 @@ package org.example.config.loader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -49,38 +49,35 @@ public final class ApplicationConfigLoader {
         List<String> locations = new ArrayList<>();
 
         /*
-         * Default locations.
+         * Explicit locations have the highest priority.
          */
-        locations.add(CLASSPATH_URL_PREFIX + "/");
-
-        locations.add(CLASSPATH_URL_PREFIX + "/config/");
-
-        locations.add(FILE_URL_PREFIX + "./");
-
-        locations.add(FILE_URL_PREFIX + "./config/");
+        addLocations(locations, environment.getProperty(CONFIG_LOCATION));
 
         /*
          * Additional locations have higher priority.
          */
-        addLocations(
-                locations,
-                environment.getProperty(ADDITIONAL_LOCATION)
-        );
+        addLocations(locations, environment.getProperty(ADDITIONAL_LOCATION));
 
         /*
-         * Explicit locations have the highest priority.
+         * Default locations.
          */
-        addLocations(
-                locations,
-                environment.getProperty(CONFIG_LOCATION)
-        );
+        locations.add(FILE_URL_PREFIX + "./");
+        locations.add(FILE_URL_PREFIX + "./config/");
+        locations.add(CLASSPATH_URL_PREFIX + "/");
+        locations.add(CLASSPATH_URL_PREFIX + "/config/");
+
+        MutablePropertySources configDataFiles = new MutablePropertySources();
 
         /*
          * Load in increasing priority.
          */
         for (String location : locations) {
-            loadLocation(environment, location);
+            loadLocation(environment, configDataFiles, location);
         }
+
+        // config PropertySources added in order after existing PropertySources, like those in StandardEnvironment
+        configDataFiles.stream()
+                .forEach(propertySource -> environment.getPropertySources().addLast(propertySource));
     }
 
     private static void addLocations(
@@ -99,6 +96,7 @@ public final class ApplicationConfigLoader {
 
     private static void loadLocation(
             ConfigurableEnvironment environment,
+            MutablePropertySources configDataFiles,
             String location) {
 
         boolean optional = false;
@@ -113,16 +111,16 @@ public final class ApplicationConfigLoader {
         String configName = environment.getProperty(CONFIG_NAME, "application");
 
         /*
-         * application.properties
-         */
-        loadResource(environment, baseLocation + configName + ".properties", optional, false);
-
-        /*
-         * application-{profile}.properties
+         * application-{profile}.properties (higher priority)
          */
         for (String profile : environment.getActiveProfiles()) {
-            loadResource(environment, baseLocation + configName + "-" + profile + ".properties", optional, true);
+            loadResource(configDataFiles, baseLocation + configName + "-" + profile + ".properties", optional, true);
         }
+
+        /*
+         * application.properties
+         */
+        loadResource(configDataFiles, baseLocation + configName + ".properties", optional, false);
     }
 
     private static String ensureTrailingSlash(String location) {
@@ -132,7 +130,7 @@ public final class ApplicationConfigLoader {
     }
 
     private static void loadResource(
-            ConfigurableEnvironment environment,
+            MutablePropertySources propertySources,
             String location,
             boolean optional,
             boolean profileSpecific) {
@@ -157,13 +155,12 @@ public final class ApplicationConfigLoader {
             Properties properties = PropertiesLoaderUtils.loadProperties(resource);
             log.debug("Found {} properties in {}", properties.size(), resource);
 
-            // PropertySource<?> propertySource = new PropertiesPropertySource(location, properties);
             PropertySource<?> resourcePropertySource = new ResourcePropertySource(resource);
 
             if (profileSpecific) {
-                environment.getPropertySources().addFirst(/*propertySource*/ resourcePropertySource);
+                propertySources.addLast(resourcePropertySource);
             } else {
-                environment.getPropertySources().addLast(/*propertySource*/ resourcePropertySource);
+                propertySources.addLast(resourcePropertySource);
             }
         } catch (IOException e) {
             throw new IllegalStateException("Cannot load configuration: " + location, e);
