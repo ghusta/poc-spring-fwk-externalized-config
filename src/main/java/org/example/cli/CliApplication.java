@@ -38,6 +38,9 @@ public class CliApplication {
         String prop1 = environment.getProperty("business.prop1");
         Objects.requireNonNull(prop1, "business prop1 is null");
 
+        String appName = environment.getRequiredProperty("app.name");
+        log.info("app.name: {}", appName);
+
         applicationContext.close();
     }
 
