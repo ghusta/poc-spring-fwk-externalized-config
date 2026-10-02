@@ -117,13 +117,13 @@ public final class ApplicationConfigLoader {
          * application-{profile}.properties (higher priority)
          */
         for (String profile : environment.getActiveProfiles()) {
-            loadResource(resourceLoader, configDataFiles, baseLocation + configName + "-" + profile + ".properties", optional, true);
+            loadResource(resourceLoader, configDataFiles, baseLocation + configName + "-" + profile + ".properties", optional);
         }
 
         /*
          * application.properties
          */
-        loadResource(resourceLoader, configDataFiles, baseLocation + configName + ".properties", optional, false);
+        loadResource(resourceLoader, configDataFiles, baseLocation + configName + ".properties", optional);
     }
 
     private static String ensureTrailingSlash(String location) {
@@ -136,8 +136,7 @@ public final class ApplicationConfigLoader {
             ResourceLoader resourceLoader,
             MutablePropertySources propertySources,
             String location,
-            boolean optional,
-            boolean profileSpecific) {
+            boolean optional) {
 
         Resource resource = resourceLoader.getResource(location);
 
@@ -160,11 +159,7 @@ public final class ApplicationConfigLoader {
             ResourcePropertySource resourcePropertySource = new ResourcePropertySource(resource);
             log.debug("Found {} properties in {}", resourcePropertySource.getSource().size(), resource);
 
-            if (profileSpecific) {
-                propertySources.addLast(resourcePropertySource);
-            } else {
-                propertySources.addLast(resourcePropertySource);
-            }
+            propertySources.addLast(resourcePropertySource);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot load configuration: " + location, e);
         }
