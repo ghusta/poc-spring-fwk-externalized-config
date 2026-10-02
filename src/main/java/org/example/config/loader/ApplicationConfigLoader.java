@@ -6,7 +6,6 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePropertySource;
@@ -44,8 +43,7 @@ public final class ApplicationConfigLoader {
     private ApplicationConfigLoader() {
     }
 
-    public static void load(ConfigurableEnvironment environment) {
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
+    public static void load(ConfigurableEnvironment environment, ResourceLoader resourceLoader) {
 
         List<String> locations = new ArrayList<>();
 

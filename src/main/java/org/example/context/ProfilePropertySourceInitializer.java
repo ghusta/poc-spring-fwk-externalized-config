@@ -21,7 +21,7 @@ public class ProfilePropertySourceInitializer
     public void initialize(ConfigurableApplicationContext context) {
         log.debug("Searching and loading application config files from ApplicationConfigLoader");
         ConfigurableEnvironment environment = context.getEnvironment();
-        ApplicationConfigLoader.load(environment);
+        ApplicationConfigLoader.load(environment, context);
     }
 
 }
