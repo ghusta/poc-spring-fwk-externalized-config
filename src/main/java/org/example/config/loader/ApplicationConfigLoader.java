@@ -77,8 +77,9 @@ public final class ApplicationConfigLoader {
         }
 
         // config PropertySources added in order after existing PropertySources, like those in StandardEnvironment
-        configDataFiles.stream()
-                .forEach(propertySource -> environment.getPropertySources().addLast(propertySource));
+        configDataFiles.forEach(
+                environment.getPropertySources()::addLast
+        );
     }
 
     private static void addLocations(
