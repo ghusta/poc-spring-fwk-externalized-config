@@ -8,6 +8,7 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.util.ResourceUtils;
 
@@ -44,6 +45,7 @@ public final class ApplicationConfigLoader {
     }
 
     public static void load(ConfigurableEnvironment environment) {
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
 
         List<String> locations = new ArrayList<>();
 
@@ -71,7 +73,7 @@ public final class ApplicationConfigLoader {
          * Load in increasing priority.
          */
         for (String location : locations) {
-            loadLocation(environment, configDataFiles, location);
+            loadLocation(resourceLoader, environment, configDataFiles, location);
         }
 
         // config PropertySources added in order after existing PropertySources, like those in StandardEnvironment
@@ -94,6 +96,7 @@ public final class ApplicationConfigLoader {
     }
 
     private static void loadLocation(
+            ResourceLoader resourceLoader,
             ConfigurableEnvironment environment,
             MutablePropertySources configDataFiles,
             String location) {
@@ -113,13 +116,13 @@ public final class ApplicationConfigLoader {
          * application-{profile}.properties (higher priority)
          */
         for (String profile : environment.getActiveProfiles()) {
-            loadResource(configDataFiles, baseLocation + configName + "-" + profile + ".properties", optional, true);
+            loadResource(resourceLoader, configDataFiles, baseLocation + configName + "-" + profile + ".properties", optional, true);
         }
 
         /*
          * application.properties
          */
-        loadResource(configDataFiles, baseLocation + configName + ".properties", optional, false);
+        loadResource(resourceLoader, configDataFiles, baseLocation + configName + ".properties", optional, false);
     }
 
     private static String ensureTrailingSlash(String location) {
@@ -129,12 +132,13 @@ public final class ApplicationConfigLoader {
     }
 
     private static void loadResource(
+            ResourceLoader resourceLoader,
             MutablePropertySources propertySources,
             String location,
             boolean optional,
             boolean profileSpecific) {
 
-        Resource resource = new DefaultResourceLoader().getResource(location);
+        Resource resource = resourceLoader.getResource(location);
 
         if (!resource.exists()) {
 
