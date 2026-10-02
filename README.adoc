@@ -6,6 +6,18 @@
 
 Trying to do the same as in Spring Boot.
 
+== Details
+
+Spring’s `Environment` abstraction provides search operations over a configurable hierarchy of property sources.
+
+The customization of property sources can be done through classes like `ConfigurableApplicationContext` and `MutablePropertySources`.
+
+The entire mechanism is configurable.
+Perhaps you have a custom source of properties that you want to integrate into this search.
+To do so, implement and instantiate your own `PropertySource` and add it to the set of `PropertySources` for the current `Environment`.
+
+See more in https://docs.spring.io/spring-framework/reference/core/beans/environment.html#beans-property-source-abstraction[`PropertySource` Abstraction].
+
 == Activate a Spring Profile
 
 To activate a profile named _dev_, there are multiple solutions, like:
@@ -34,6 +46,8 @@ export SPRING_PROFILES_ACTIVE=dev
 * Spring
 ** PropertySource Abstraction
 *** https://docs.spring.io/spring-framework/reference/core/beans/environment.html#beans-property-source-abstraction
+** Using @PropertySource
+*** https://docs.spring.io/spring-framework/reference/core/beans/environment.html#beans-using-propertysource
 ** Spring Profiles
 *** https://www.baeldung.com/spring-profiles
 * Quarkus
