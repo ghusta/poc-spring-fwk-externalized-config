@@ -26,6 +26,18 @@ export SPRING_PROFILES_ACTIVE=dev
 
 == References
 
-* https://docs.spring.io/spring-boot/reference/features/external-config.html
-* Spring Profiles
-** https://www.baeldung.com/spring-profiles
+* Spring Boot
+** Externalized Configuration
+*** https://docs.spring.io/spring-boot/reference/features/external-config.html
+** Properties and Configuration
+*** https://docs.spring.io/spring-boot/how-to/properties-and-configuration.html
+* Spring
+** PropertySource Abstraction
+*** https://docs.spring.io/spring-framework/reference/core/beans/environment.html#beans-property-source-abstraction
+** Spring Profiles
+*** https://www.baeldung.com/spring-profiles
+* Quarkus
+** Configuration reference guide
+*** https://quarkus.io/guides/config-reference/
+* MicroProfile Config
+** https://microprofile.io/specifications/config/
