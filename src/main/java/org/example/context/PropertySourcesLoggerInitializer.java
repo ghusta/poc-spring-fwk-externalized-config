@@ -21,6 +21,7 @@ public class PropertySourcesLoggerInitializer
         ConfigurableEnvironment environment = applicationContext.getEnvironment();
         MutablePropertySources propertySources = environment.getPropertySources();
 
+        log.debug("Current ConfigurableEnvironment is of type: {}", environment.getClass().getSimpleName());
         log.debug("Listing the ConfigurableEnvironment's propertySources (@PropertySources not displayed here as they are processed later)");
         int i = 0;
         for (PropertySource<?> propertySource : propertySources) {
