@@ -8,7 +8,6 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.util.ResourceUtils;
 
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Tries to mimic Spring Boot's external application properties loading.
@@ -153,10 +151,9 @@ public final class ApplicationConfigLoader {
 
         try {
             log.debug("Loading properties from resource {} ({})", resource, resource.getURI());
-            Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-            log.debug("Found {} properties in {}", properties.size(), resource);
 
-            PropertySource<?> resourcePropertySource = new ResourcePropertySource(resource);
+            ResourcePropertySource resourcePropertySource = new ResourcePropertySource(resource);
+            log.debug("Found {} properties in {}", resourcePropertySource.getSource().size(), resource);
 
             if (profileSpecific) {
                 propertySources.addLast(resourcePropertySource);
