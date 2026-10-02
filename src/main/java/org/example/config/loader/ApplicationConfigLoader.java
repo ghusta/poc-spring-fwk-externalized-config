@@ -2,6 +2,7 @@ package org.example.config.loader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
@@ -33,7 +34,7 @@ public final class ApplicationConfigLoader {
 
     private static final String FILE_URL_PREFIX = ResourceUtils.FILE_URL_PREFIX;
 
-    public static final String ACTIVE_PROFILES = "spring.profiles.active";
+    public static final String ACTIVE_PROFILES = AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME;
 
     public static final String CONFIG_LOCATION = "spring.config.location";
 
