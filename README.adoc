@@ -40,6 +40,8 @@ export SPRING_PROFILES_ACTIVE=dev
 
 If using Spring for a web application, this feature can also be used.
 
+=== Java-based configuration
+
 You must add initializers (`ProfilePropertySourceInitializer` required) in a subclass of :
 
 - `AbstractContextLoaderInitializer` (spring-web), in method `getRootApplicationContextInitializers()`
