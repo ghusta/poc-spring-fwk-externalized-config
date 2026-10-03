@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,10 +48,13 @@ public final class ApplicationConfigLoader {
 
         List<String> locations = new ArrayList<>();
 
+        boolean isConfigLocationDefined = StringUtils.hasText(environment.getProperty(CONFIG_LOCATION));
         /*
          * Explicit locations have the highest priority.
          */
-        addLocations(locations, environment.getProperty(CONFIG_LOCATION));
+        if (isConfigLocationDefined) {
+            addLocations(locations, environment.getProperty(CONFIG_LOCATION));
+        }
 
         /*
          * Additional locations have higher priority.
@@ -60,10 +64,12 @@ public final class ApplicationConfigLoader {
         /*
          * Default locations.
          */
-        locations.add(FILE_URL_PREFIX + "./");
-        locations.add(FILE_URL_PREFIX + "./config/");
-        locations.add(CLASSPATH_URL_PREFIX + "/");
-        locations.add(CLASSPATH_URL_PREFIX + "/config/");
+        if (!isConfigLocationDefined) {
+            locations.add(FILE_URL_PREFIX + "./");
+            locations.add(FILE_URL_PREFIX + "./config/");
+            locations.add(CLASSPATH_URL_PREFIX + "/");
+            locations.add(CLASSPATH_URL_PREFIX + "/config/");
+        }
 
         MutablePropertySources configDataFiles = new MutablePropertySources();
 
@@ -162,4 +168,5 @@ public final class ApplicationConfigLoader {
             throw new IllegalStateException("Cannot load configuration: " + location, e);
         }
     }
+
 }
