@@ -36,6 +36,15 @@ To activate a profile named _dev_, there are multiple solutions, like:
 export SPRING_PROFILES_ACTIVE=dev
 ----
 
+== With Spring Web
+
+If using Spring for a web application, this feature can also be used.
+
+You must add initializers (`ProfilePropertySourceInitializer` required) in a subclass of :
+
+- `AbstractContextLoaderInitializer` (spring-web), in method `getRootApplicationContextInitializers()`
+- `AbstractAnnotationConfigDispatcherServletInitializer` (spring-webmvc), in method `getServletApplicationContextInitializers()`, if `DispatcherServlet` is needed
+
 == References
 
 * Spring Boot
