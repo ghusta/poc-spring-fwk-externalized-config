@@ -40,12 +40,49 @@ export SPRING_PROFILES_ACTIVE=dev
 
 If using Spring for a web application, this feature can also be used.
 
-=== Java-based configuration
+=== Java-based configuration, without web.xml
 
 You must add initializers (`ProfilePropertySourceInitializer` required) in a subclass of :
 
 - `AbstractContextLoaderInitializer` (spring-web), in method `getRootApplicationContextInitializers()`
 - `AbstractAnnotationConfigDispatcherServletInitializer` (spring-webmvc), in method `getServletApplicationContextInitializers()`, if `DispatcherServlet` is needed
+
+=== With web.xml
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app
+        xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            https://jakarta.ee/xml/ns/jakartaee
+            https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+        version="6.0">
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            org.example.config.RootConfig
+        </param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>contextInitializerClasses</param-name>
+        <param-value>
+            org.example.context.ProfilePropertySourceInitializer
+        </param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
+</web-app>
+----
 
 == References
 
