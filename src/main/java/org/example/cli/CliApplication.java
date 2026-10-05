@@ -4,6 +4,7 @@ import org.example.config.ApplicationConfig;
 import org.example.context.ProfilePropertySourceInitializer;
 import org.example.context.ProfilesLoggerInitializer;
 import org.example.context.PropertySourcesLoggerInitializer;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
@@ -46,12 +47,15 @@ public class CliApplication {
 
     private static void initializeContextInitializers(ConfigurableApplicationContext applicationContext) {
         ApplicationContextInitializer<ConfigurableApplicationContext>[] initializers = getRootApplicationContextInitializers();
+        if (initializers == null) {
+            return;
+        }
         AnnotationAwareOrderComparator.sort(initializers);
         Arrays.stream(initializers)
                 .forEach(i -> i.initialize(applicationContext));
     }
 
-    private static ApplicationContextInitializer<ConfigurableApplicationContext>[] getRootApplicationContextInitializers() {
+    private static ApplicationContextInitializer<ConfigurableApplicationContext> @Nullable [] getRootApplicationContextInitializers() {
         return new ApplicationContextInitializer[]{
                 new ProfilePropertySourceInitializer(),
                 new ProfilesLoggerInitializer(),
