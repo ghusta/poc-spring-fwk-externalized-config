@@ -45,8 +45,9 @@ public class CliApplication {
     }
 
     private static void initializeContextInitializers(ConfigurableApplicationContext applicationContext) {
-        Arrays.stream(getRootApplicationContextInitializers())
-                .sorted(AnnotationAwareOrderComparator.INSTANCE)
+        ApplicationContextInitializer<ConfigurableApplicationContext>[] initializers = getRootApplicationContextInitializers();
+        AnnotationAwareOrderComparator.sort(initializers);
+        Arrays.stream(initializers)
                 .forEach(i -> i.initialize(applicationContext));
     }
 
