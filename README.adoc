@@ -6,6 +6,21 @@
 
 Trying to do the same as in Spring Boot.
 
+== Goal
+
+The goal is to be able to provide **multiple sources of config properties**,
+in a defined order.
+A given property will be searched in the different sources, until it is found, in the defined order.
+
+The different sources should be at least, by order of priority :
+
+- System properties
+- Environment variables
+- Application config file in `file:./config/application.properties`
+- Application config file in `classpath:application.properties`
+
+Other sources of config properties may be added.
+
 == Details
 
 Spring’s `Environment` abstraction provides search operations over a configurable hierarchy of property sources.
